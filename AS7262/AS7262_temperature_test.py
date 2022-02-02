@@ -1,8 +1,7 @@
-#!/usr/bin/python3
-#This script uses a as7262 6 colour spectral scanner from Pimoroni and displays the resulting values.
-#raspberryconnect.com
 
 from as7262 import AS7262
+import matplotlib.pyplot as plt
+import numpy as np
 
 as7262 = AS7262()
 
@@ -13,15 +12,21 @@ as7262.set_measurement_mode(2) #2 all colours continuous
 as7262.set_illumination_led_current(12.5) #12.5mA 25mA 50mA 100mA
 as7262.set_illumination_led(1) # led on
 
-def main():
-	try:
-		while 1:
-			values = as7262.get_calibrated_values() #get values from scan
-			spec = [float(i) for i in list(values)] #convert results from string to float
-			print(spec)
-	except KeyboardInterrupt:
-			as7262.set_measurement_mode(3) #Switch to scan on demand
-			as7262.set_illumination_led(0) #light off
+def bargraph(self):
+    label = ("Red","Ora","Yel","Gre","Blu","Vio")
+    y_pos = np.arange(len(label))
+    barcol = ('red','orange','yellow','green','blue','violet') #Graph bar colours
+    plt.bar(y_pos,self,color=(barcol))
+    plt.xticks(y_pos,label)
+    plt.show()
 
-if __name__ == '__main__':
-    main()
+try:
+    while True:
+        values = as7262.get_calibrated_values() #get values from scan
+        spec = [float(i) for i in list(values)] #convert results from string to float
+        print(spec)
+        bargraph(spec)
+
+except KeyboardInterrupt:
+    as7262.set_measurement_mode(3) #switch to single scan mode
+    as7262.set_illumination_led(0) 'led off
