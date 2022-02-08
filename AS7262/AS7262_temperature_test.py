@@ -4,8 +4,6 @@
 #raspberryconnect.com
 
 from as7262 import AS7262
-import math
-import numpy
 
 as7262 = AS7262()
 
@@ -22,8 +20,11 @@ def main():
 			values = as7262.get_calibrated_values() #get values from scan
 			
 			spec = [float(i) for i in list(values)] #convert results from string to float				
-			spec = numpy.mean(spec)
-			print(spec)
+			sum=0
+			for j in range(len(spec)):
+				sum += spec[j]	 
+			print("Sum: ",sum)
+			#print("Spec: ",spec)
 	except KeyboardInterrupt:
 			as7262.set_measurement_mode(3) #Switch to scan on demand
 			as7262.set_illumination_led(0) #light off
