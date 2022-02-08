@@ -33,7 +33,7 @@ client.on_connect = on_connect
 #(ca_certs=BROKER_CERT,certfile=CLIENT_CERT,keyfile=PRIVATE_KEY,tls_version=ssl.PROTOCOL_TLSv1_2)
 #client.tls_set(ca_certs="mosquitto.org.crt", certfile="client.crt",keyfile='client.key')
 #(BROKER_ADDRESS,port=N)
-client.connect("broker.mqttdashboard.com",port=1883)
+client.connect("test.mosquitto.org",port=1883)
 #pulish message
 MSG_INFO = client.publish("IC.embedded/hexfuture/test",payload,qos=2)
 mqtt.error_string(MSG_INFO.rc)
