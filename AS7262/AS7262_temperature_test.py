@@ -18,7 +18,9 @@ def main():
 	try:
 		while 1:
 			values = as7262.get_calibrated_values() #get values from scan
+			
 			spec = [float(i) for i in list(values)] #convert results from string to float
+			spec /= list.size(values)
 			print(spec)
 	except KeyboardInterrupt:
 			as7262.set_measurement_mode(3) #Switch to scan on demand
