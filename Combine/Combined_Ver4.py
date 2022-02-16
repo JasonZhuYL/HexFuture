@@ -2,7 +2,6 @@
 #This script uses a as7262 6 colour spectral scanner from Pimoroni and displays the resulting values.
 #raspberryconnect.com
 
-from as7262 import AS7262
 import sys
 import smbus2
 import time
@@ -390,6 +389,7 @@ def main():
         else:
             weight_messsage = "No water"
         data = {
+        'isPotConnected':1,
         'humidity': soil_sensor,
         'tempurature':round(celsTemp,2),
         'lightness': round(sum,2),
