@@ -2,6 +2,10 @@
 #!/usr/bin/python3
 #This script uses a as7262 6 colour spectral scanner from Pimoroni and displays the resulting values.
 #raspberryconnect.com
+import sys
+from i2cdevice.adapter import Adapter, LookupAdapter
+from i2cdevice import Device, Register, BitField, _int_to_bytes
+import time 
 
 class as7262VirtualRegisterBus():
     """AS7262 Virtual Register.
