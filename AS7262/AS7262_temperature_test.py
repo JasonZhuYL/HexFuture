@@ -1,7 +1,6 @@
 
 #!/usr/bin/python3
 #This script uses a as7262 6 colour spectral scanner from Pimoroni and displays the resulting values.
-#raspberryconnect.com
 
 from as7262 import AS7262
 
