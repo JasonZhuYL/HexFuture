@@ -5,7 +5,7 @@ import struct
 import json
 
 # from i2cdevice import Device, Register, BitField, _int_to_bytes
-from i2cdevice.adapter import Adapter, LookupAdapter
+
 from collections import namedtuple
 #Device 
 def _leading_zeros(value, bit_width=8):
@@ -257,6 +257,36 @@ def _int_to_bytes(value, length, endianness='big'):
         if endianness == 'big':
             output.reverse()
         return output
+
+class Adapter:
+    """
+    Must implement `_decode()` and `_encode()`.
+    """
+    def _decode(self, value):
+        raise NotImplementedError
+
+    def _encode(self, value):
+        raise NotImplementedError
+
+class LookupAdapter(Adapter):
+    """Adaptor with a dictionary of values.
+    :param lookup_table: A dictionary of one or more key/value pairs where the key is the human-readable value and the value is the bitwise register value
+    """
+    def __init__(self, lookup_table, snap=True):
+        self.lookup_table = lookup_table
+        self.snap = snap
+
+    def _decode(self, value):
+        for k, v in self.lookup_table.items():
+            if v == value:
+                return k
+        raise ValueError("{} not in lookup table".format(value))
+
+    def _encode(self, value):
+        if self.snap and type(value) in [int, float]:
+            value = min(list(self.lookup_table.keys()), key=lambda x: abs(x - value))
+        return self.lookup_table[value]
+
 
 
 
