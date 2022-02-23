@@ -59,12 +59,12 @@ def main():
         else:
             weight_messsage = "No water"
         # >25000; Sensor not inserted into soil
-        # >18000; Soil is very dry
+        # >22000; Soil is very dry
         # >8000 <18000; Moisture is on suitable level
         # <8000; Soil is too humid
         if soil_sensor>=25000:
             soil_messsage = "Sensor not inserted into soil"
-        elif soil_sensor>18000:
+        elif soil_sensor>22000:
             soil_messsage = "Soil is very dry"
             print("blinking")
             GPIO.output(22,GPIO.HIGH)
