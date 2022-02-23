@@ -8,18 +8,7 @@ import json
 
 from collections import namedtuple
 #Device 
-def _leading_zeros(value, bit_width=8):
-    """Count leading zeros on a binary number with a given bit_width
-    ie: 0b0011 = 2
-    Used for shifting around values after masking.
-    """
-    count = 0
-    for _ in range(bit_width):
-        if value & (1 << (bit_width - 1)):
-            return count
-        count += 1
-        value <<= 1
-    return count
+
 class MockSMBus:
     def __init__(self, i2c_bus, default_registers=None):
         self.regs = [0 for _ in range(255)]
@@ -149,22 +138,6 @@ class Device(object):
         register = self.registers[name]
         return self._i2c_write(register.address, self.values[register.name], register.bit_width)
 
-    def get_addresses(self):
-        return self._i2c_addresses
-
-    def select_address(self, address):
-        if address in self._i2c_addresses:
-            self._i2c_address = address
-            return True
-        raise ValueError("Address {:02x} invalid!".format(address))
-
-    def next_address(self):
-        next_addr = self._i2c_addresses.index(self._i2c_address)
-        next_addr += 1
-        next_addr %= len(self._i2c_addresses)
-        self._i2c_address = self._i2c_addresses[next_addr]
-        return self._i2c_address
-
     def set(self, register, **kwargs):
         """Write one or more fields on a device register.
         Accepts multiple keyword arguments, one for each field to write.
@@ -230,9 +203,9 @@ class Device(object):
         if not self.locked[register.name]:
             self.write_register(register.name)
 
-    def get_register(self, register):
-        register = self.registers[register]
-        return self._i2c_read(register.address, register.bit_width)
+    # def get_register(self, register):
+    #     register = self.registers[register]
+    #     return self._i2c_read(register.address, register.bit_width)
 
     def _i2c_write(self, register, value, bit_width):
         values = _int_to_bytes(value, bit_width // self._bit_width, 'big')
