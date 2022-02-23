@@ -8,6 +8,44 @@ import json
 from i2cdevice.adapter import Adapter, LookupAdapter
 from collections import namedtuple
 #Device 
+def _leading_zeros(value, bit_width=8):
+    """Count leading zeros on a binary number with a given bit_width
+    ie: 0b0011 = 2
+    Used for shifting around values after masking.
+    """
+    count = 0
+    for _ in range(bit_width):
+        if value & (1 << (bit_width - 1)):
+            return count
+        count += 1
+        value <<= 1
+    return count
+class MockSMBus:
+    def __init__(self, i2c_bus, default_registers=None):
+        self.regs = [0 for _ in range(255)]
+        if default_registers is not None:
+            for index in default_registers.keys():
+                self.regs[index] = default_registers.get(index)
+
+    def write_i2c_block_data(self, i2c_address, register, values):
+        self.regs[register:register + len(values)] = values
+
+    def read_i2c_block_data(self, i2c_address, register, length):
+        return self.regs[register:register + length]
+
+
+def _trailing_zeros(value, bit_width=8):
+    """Count trailing zeros on a binary number with a given bit_width
+    ie: 0b11000 = 3
+    Used for shifting around values after masking.
+    """
+    count = 0
+    for _ in range(bit_width):
+        if value & 1:
+            return count
+        count += 1
+        value >>= 1
+    return count
 
 class _RegisterProxy(object):
     """Register Proxy
