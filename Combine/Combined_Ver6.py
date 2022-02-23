@@ -1,4 +1,5 @@
 import HexLibrary as Hex
+import RPi.GPIO as GPIO
 
 def main():
     as7262 = Hex.AS7262()
