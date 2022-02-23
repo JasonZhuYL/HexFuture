@@ -3,6 +3,7 @@ import smbus
 import time
 import struct
 import json
+import RPi.GPIO as GPIO
 
 # from i2cdevice import Device, Register, BitField, _int_to_bytes
 

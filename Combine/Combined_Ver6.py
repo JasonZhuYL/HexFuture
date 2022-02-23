@@ -71,7 +71,6 @@ def main():
             time.sleep(1)                   # Delay for 1 second
             GPIO.output(22, GPIO.LOW)  # Turn LED off
             time.sleep(1)                   # Delay for 1 second
-
         elif soil_sensor > 8000:
             soil_messsage = "Moisture is on suitable level"
         elif soil_sensor< 8000:
@@ -84,6 +83,7 @@ def main():
         'lightness': round(sum,2),
         'weight': weight_messsage,
         'rHumidity': round(humidity,2),
+        'soil humidity: ':soil_sensor
         }
         return data
         # print('Load Cell Output: {}'.format(diff))
