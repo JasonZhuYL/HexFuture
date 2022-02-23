@@ -6,6 +6,7 @@ import json
 
 # from i2cdevice import Device, Register, BitField, _int_to_bytes
 from i2cdevice.adapter import Adapter, LookupAdapter
+import namedtuple
 
 #Device 
 
@@ -40,7 +41,6 @@ class Device(object):
         self.locked = {}
         self.registers = {}
         self.values = {}
-        import namedtuple
         if type(i2c_address) is list:
             self._i2c_addresses = i2c_address
             self._i2c_address = i2c_address[0]
