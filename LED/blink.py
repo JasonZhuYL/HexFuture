@@ -20,12 +20,9 @@ GPIO.setup(22,GPIO.OUT)
 # Blink forever
 print("blinking")
 GPIO.output(led_pin, GPIO.HIGH) # Turn LED on
-#GPIO.output(10,GPIO.HIGH)
-#GPIO.output(24,GPIO.HIGH)
-GPIO.output(23,GPIO.HIGH)
 GPIO.output(22,GPIO.HIGH)
 time.sleep(1)                   # Delay for 1 second
-GPIO.output(led_pin, GPIO.LOW)  # Turn LED off
+GPIO.output(22, GPIO.LOW)  # Turn LED off
 time.sleep(1)                   # Delay for 1 second
 
 

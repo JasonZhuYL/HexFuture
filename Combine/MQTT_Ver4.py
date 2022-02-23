@@ -24,4 +24,4 @@ while True:
     MSG_INFO = client.publish("IC.embedded/hexfuture/test", payload, qos=2)
     mqtt.error_string(MSG_INFO.rc)
     print(payload)
-    time.sleep(20)
+    time.sleep(5)

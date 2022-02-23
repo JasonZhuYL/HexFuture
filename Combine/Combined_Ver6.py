@@ -14,6 +14,11 @@ def main():
     SOIL_GAIN = 1
     diff = 0
     mode = 0
+
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(22,GPIO.OUT)
+
+
     try:
         diff = adc.read_adc_difference(differential = mode,gain = GAIN)
         soil_sensor = adc.read_adc(2, gain=SOIL_GAIN)
@@ -36,12 +41,20 @@ def main():
             soil_messsage = "Sensor not inserted into soil"
         elif soil_sensor>18000:
             soil_messsage = "Soil is very dry"
+            print("blinking")
+            GPIO.output(led_pin, GPIO.HIGH) # Turn LED on
+            GPIO.output(22,GPIO.HIGH)
+            time.sleep(1)                   # Delay for 1 second
+            GPIO.output(22, GPIO.LOW)  # Turn LED off
+            time.sleep(1)                   # Delay for 1 second
+
         elif soil_sensor > 8000:
             soil_messsage = "Moisture is on suitable level"
         elif soil_sensor< 8000:
             soil_messsage = "Too Humid"
         data = {
         'isPotConnected':1,
+        'humidityValue' : round(soil_sensor,2),
         'humidity': soil_messsage,
         'tempurature':round(celsTemp,2),
         'lightness': round(sum,2),
