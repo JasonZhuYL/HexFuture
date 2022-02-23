@@ -6,8 +6,7 @@ import json
 
 # from i2cdevice import Device, Register, BitField, _int_to_bytes
 from i2cdevice.adapter import Adapter, LookupAdapter
-import namedtuple
-
+from collections import namedtuple
 #Device 
 
 
