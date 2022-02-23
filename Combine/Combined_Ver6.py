@@ -67,7 +67,6 @@ def main():
         elif soil_sensor>18000:
             soil_messsage = "Soil is very dry"
             print("blinking")
-            GPIO.output(led_pin, GPIO.HIGH) # Turn LED on
             GPIO.output(22,GPIO.HIGH)
             time.sleep(1)                   # Delay for 1 second
             GPIO.output(22, GPIO.LOW)  # Turn LED off
