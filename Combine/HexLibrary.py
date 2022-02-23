@@ -9,6 +9,41 @@ from i2cdevice.adapter import Adapter, LookupAdapter
 from collections import namedtuple
 #Device 
 
+class _RegisterProxy(object):
+    """Register Proxy
+    This proxy catches lookups against non existent get_fieldname and set_fieldname methods
+    and converts them into calls against the device's get_field and set_field methods with
+    the appropriate options.
+    This means device.register.set_field(value) and device.register.get_field(value) will work
+    and also transparently update the underlying device without the register or field objects
+    having to know anything about how data is written/read/stored.
+    """
+    def __init__(self, device, register):
+        self.device = device
+        self.register = register
+
+    def __getattribute__(self, name):
+        if name.startswith("get_"):
+            name = name.replace("get_", "")
+            return lambda: self.device.get_field(self.register.name, name)
+        if name.startswith("set_"):
+            name = name.replace("set_", "")
+            return lambda value: self.device.set_field(self.register.name, name, value)
+        return object.__getattribute__(self, name)
+
+    def write(self):
+        return self.device.write_register(self.register.name)
+
+    def read(self):
+        return self.device.read_register(self.register.name)
+
+    def __enter__(self):
+        self.device.read_register(self.register.name)
+        self.device.lock_register(self.register.name)
+        return self
+
+    def __exit__(self, exception_type, exception_value, exception_traceback):
+        self.device.unlock_register(self.register.name)
 
 class Register():
     """Store information about an i2c register"""
