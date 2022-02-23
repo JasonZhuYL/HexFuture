@@ -1,5 +1,5 @@
 import sys
-import smbus2
+import smbus 
 import time
 import struct
 import json
@@ -310,7 +310,7 @@ ADS1115_CONFIG_COMP_QUE = {
 ADS1115_CONFIG_COMP_QUE_DISABLE = 0x0003
 #----------------------------------------------------------------------------------------------------------------#
 class ADS1115():
-    """Base functionality for ADS1x15 analog to digital converters."""
+    """Base functionality for ADS1115 analog to digital converters."""
 
     def __init__(self, address=ADS1115_DEFAULT_ADDRESS, i2c=None, **kwargs):
         if i2c is None:
