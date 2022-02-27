@@ -1,5 +1,6 @@
 import sys
 import smbus 
+import smbus2
 import time
 import struct
 import json
@@ -263,6 +264,7 @@ class LookupAdapter(Adapter):
 
 
 
+bus = smbus2.SMBus(1)
 
 
 # Register and other configuration values:
@@ -305,6 +307,83 @@ ADS1115_CONFIG_COMP_QUE = {
 }
 ADS1115_CONFIG_COMP_QUE_DISABLE = 0x0003
 #----------------------------------------------------------------------------------------------------------------#
+class ADS1115_new(): 
+    def __init__(self,address):
+        self.address = address
+        # the default datarate  
+        self.datarate = 0x0080
+
+    def _conversion_value(self, low, high):
+        # Convert to 16-bit signed value.
+        value = ((high & 0xFF) << 8) | (low & 0xFF)
+        # Check for sign bit and turn into a negative value if set.
+        if value & 0x8000 != 0:
+            value -= 1 << 16
+        return value
+    
+    def read_adc(self, channel, gain=1):
+        assert 0<= channel <= 3, 'Channel must be a value within 0-3!'
+
+        return self._read(channel + 0x04, gain, ADS1115_CONFIG_MODE_SINGLE)
+
+    def _read(self, mux, gain, mode):
+        """Perform an ADC read with the provided mux, gain, data_rate, and mode
+        values.  Returns the signed integer result of the read.
+        """
+        config = 0x8000
+        config |= (mux & 0x07) << 12
+        if gain not in ADS1115_CONFIG_GAIN:
+            raise ValueError('Gain must be one of: 2/3, 1, 2, 4, 8, 16')
+        config |= ADS1115_CONFIG_GAIN[gain]
+
+        #setting datarate to default 128
+        config |= 0x0080
+
+        #mode for single shot (set to 0 for continuous)
+        config |= 0x0100
+        #diable the comparator mode 
+        config |= 0x0003
+
+        #writing to the let slave know which register to write 
+        #last bit is 0 for written 
+        # bus.write_byte((self.address<<1)&0xFF)
+
+        #0x01 for config register 
+        # bus.write_byte(self.address,0x01)
+        print("sending ",config)
+        bus.write_word_data(self.address,0x01,config)
+
+        # Send the config value to start the ADC conversion.
+        # Explicitly break the 16-bit value down to a big endian pair of bytes. 
+        # bus.write_byte(self.address,(config >> 8) & 0xFF)
+        # bus.write_byte(self.address, config & 0xFF)
+
+        # self._device.writeList(ADS1115_POINTER_CONFIG_REGISTER, [(config >> 8) & 0xFF, config & 0xFF])
+       
+        # Wait for the ADC sample to finish based on the sample rate plus a
+        # small offset to be sure (0.1 millisecond).
+        time.sleep(1.0/128.0+0.0001)
+        # Retrieve the result.
+        word2byte = bus.read_word_data(self.address,0x00)
+        [(config >> 8) & 0xFF, config & 0xFF]
+        data0 = (word2byte >> 8) & 0xFF
+        data1 =  word2byte  & 0xFF
+        # result = self._device.readList(ADS1115_POINTER_CONVERSION_REGISTER, 2)
+        return self._conversion_value(data0,  data1)
+    def read_adc_difference(self, differential, gain=1, data_rate=None):
+        """Read the difference between two ADC channels and return the ADC value
+        as a signed integer result.  Differential must be one of:
+          - 0 = Channel 0 minus channel 1
+          - 1 = Channel 0 minus channel 3
+          - 2 = Channel 1 minus channel 3
+          - 3 = Channel 2 minus channel 3
+        """
+        assert 0 <= differential <= 3, 'Differential must be a value within 0-3!'
+        # Perform a single shot read using the provided differential value
+        # as the mux value (which will enable differential mode).
+        return self._read(differential, gain, ADS1115_CONFIG_MODE_SINGLE)
+
+
 class ADS1115():
     """Base functionality for ADS1115 analog to digital converters."""
 

@@ -44,15 +44,15 @@ def main():
     as7262.set_measurement_mode(2) #2 all colours continuous
     # as7262.set_illumination_led_current(12.5) #12.5mA 25mA 50mA 100mA
     # as7262.set_illumination_led(1) # led on
-    adc = Hex.ADS1115()
+    adc = Hex.ADS1115_new()
     GAIN = 2
     SOIL_GAIN = 1
     diff = 0
     mode = 0
-
+    
+    GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(22,GPIO.OUT)
-    GPIO.setwarnings(False)
 
     try:
         diff = adc.read_adc_difference(differential = mode,gain = GAIN)
