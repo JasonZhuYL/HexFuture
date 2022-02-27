@@ -265,6 +265,7 @@ class LookupAdapter(Adapter):
 
 
 bus = smbus2.SMBus(1)
+bus1 = smbus2.i2c_msg
 
 
 # Register and other configuration values:
@@ -352,7 +353,10 @@ class ADS1115_new():
         # bus.write_byte(self.address,0x01)
         # bus.write_block_data(self.address,0x01,[(config >> 8) & 0xFF, config & 0xFF])
         # bus.write(self.address,[0x01,(config >> 8) & 0xFF, config & 0xFF])
-        bus.write_word_data(self.address,0x01,config)
+        # bus.write_word_data(self.address,0x01,config)
+
+        write1 = smbus2.i2c_msg.write(self.address,[0x01,(config >> 8) & 0xFF, config & 0xFF])
+        bus.i2c_rdwr(write1)
         print("sending ",config)
 
         # Send the config value to start the ADC conversion.
@@ -365,22 +369,34 @@ class ADS1115_new():
         # Wait for the ADC sample to finish based on the sample rate plus a
         # small offset to be sure (0.1 millisecond).
         time.sleep(1.0/128.0+0.0001)
+        time.sleep(0.1)
 
         # reading process 
         # Retrieve the result.
+        write2 = smbus2.i2c_msg.write(self.address,[0x00])
+        read1 = smbus2.i2c_msg.read(self.address,2)
+        bus.i2c_rdwr(write2,read1)
+        print("printing the write value now")
+        for value in write2:
+            print(value)
+        print("printing the read value now")
+        for value in read1:
+            print(value)
+        return 0,0
 
-        word = bus.read_word_data(self.address,0x00)
-        print("the word (two byte) is ",word)
+        # word = bus.read_word_data(self.address,0x00)
+        # print("the word (two byte) is ",word)
 
         # print("data0: ",word[1],"  data1: ", word[0])
 
 
         # [(config >> 8) & 0xFF, config & 0xFF]
-        data0 = (word >> 8) & 0xFF
-        data1 =  word  & 0xFF
-        print("data0: ",data0,"  data1: ", data1)
+        # data0 = (word >> 8) & 0xFF
+        # data1 =  word  & 0xFF
+        # print("data0: ",data0,"  data1: ", data1)
         # result = self._device.readList(ADS1115_POINTER_CONVERSION_REGISTER, 2)
-        return self._conversion_value(data0,  data1)
+        # return self._conversion_value(data0,  data1)
+
 
     def read_adc_difference(self, differential, gain=1, data_rate=None):
         """Read the difference between two ADC channels and return the ADC value
