@@ -376,13 +376,10 @@ class ADS1115_new():
         write2 = smbus2.i2c_msg.write(self.address,[0x00])
         read1 = smbus2.i2c_msg.read(self.address,2)
         bus.i2c_rdwr(write2,read1)
-        print("printing the write value now")
-        for value in write2:
-            print(value)
         print("printing the read value now")
         for value in read1:
             print(value)
-        return 0,0
+        return self._conversion_value(read1[1],read1[0])
 
         # word = bus.read_word_data(self.address,0x00)
         # print("the word (two byte) is ",word)
