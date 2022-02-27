@@ -350,9 +350,9 @@ class ADS1115_new():
 
         #0x01 for config register 
         # bus.write_byte(self.address,0x01)
-        print("sending ",config)
         # bus.write_block_data(self.address,0x01,[(config >> 8) & 0xFF, config & 0xFF])
         bus.write(self.address,[0x01,(config >> 8) & 0xFF, config & 0xFF])
+        print("sending ",config)
 
         # Send the config value to start the ADC conversion.
         # Explicitly break the 16-bit value down to a big endian pair of bytes. 
@@ -371,6 +371,7 @@ class ADS1115_new():
         word2byte = bus.read(self.address,2)
         print("the word (two byte) is ",word2byte)
 
+        print("data0: ",word2byte[1],"  data1: ", word2byte[0])
 
 
         # [(config >> 8) & 0xFF, config & 0xFF]
