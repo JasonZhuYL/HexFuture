@@ -346,57 +346,23 @@ class ADS1115_new():
         #diable the comparator mode 
         config |= 0x0003
 
-        #writing to the let slave know which register to write 
-        #last bit is 0 for written 
-        # bus.write_byte((self.address<<1)&0xFF)
-
         #0x01 for config register 
-        # bus.write_byte(self.address,0x01)
-        # bus.write_block_data(self.address,0x01,[(config >> 8) & 0xFF, config & 0xFF])
-        # bus.write(self.address,[0x01,(config >> 8) & 0xFF, config & 0xFF])
-        # bus.write_word_data(self.address,0x01,config)
-
+        # Send the config value to start the ADC conversion.
+        # Explicitly break the 16-bit value down to a big endian pair of bytes.         
         write1 = smbus2.i2c_msg.write(self.address,[0x01,(config >> 8) & 0xFF, config & 0xFF])
         bus.i2c_rdwr(write1)
-        print("sending ",config)
 
-        # Send the config value to start the ADC conversion.
-        # Explicitly break the 16-bit value down to a big endian pair of bytes. 
-        # bus.write_byte(self.address,(config >> 8) & 0xFF)
-        # bus.write_byte(self.address, config & 0xFF)
-
-        # self._device.writeList(ADS1115_POINTER_CONFIG_REGISTER, [(config >> 8) & 0xFF, config & 0xFF])
-       
         # Wait for the ADC sample to finish based on the sample rate plus a
         # small offset to be sure (0.1 millisecond).
         time.sleep(1.0/128.0+0.0001)
-        time.sleep(0.1)
 
         # reading process 
         # Retrieve the result.
         write2 = smbus2.i2c_msg.write(self.address,[0x00])
         read1 = smbus2.i2c_msg.read(self.address,2)
         bus.i2c_rdwr(write2,read1)
-        print("printing the read value now")
-        for value in read1:
-            print(value)
-        
-        print(list(read1))
         result = list(read1)
         return self._conversion_value(int(result[1]),int(result[0]))
-
-        # word = bus.read_word_data(self.address,0x00)
-        # print("the word (two byte) is ",word)
-
-        # print("data0: ",word[1],"  data1: ", word[0])
-
-
-        # [(config >> 8) & 0xFF, config & 0xFF]
-        # data0 = (word >> 8) & 0xFF
-        # data1 =  word  & 0xFF
-        # print("data0: ",data0,"  data1: ", data1)
-        # result = self._device.readList(ADS1115_POINTER_CONVERSION_REGISTER, 2)
-        # return self._conversion_value(data0,  data1)
 
 
     def read_adc_difference(self, differential, gain=1, data_rate=None):
