@@ -100,5 +100,47 @@ class ADS1115():
         return self._read(differential, gain)
 
 
+class ColourSensor:
 
-# Convert the data
+    def __init__(self, i2cAddress):
+
+        self.address = i2cAddress
+
+
+    def convert_value(self, lowByte, highByte):
+        #convert_value,  add low and high bytes of data together to 
+        #provide output
+        value = (highByte<<8) + lowByte        
+        return value
+
+    def single_access_read(self, reg=0x00):
+        #single_access_read, function to read a single data register
+        #of the TCS34725 RGB colour sensor
+
+        cmdBit = 0b1 # cmd field set to 1
+        msBit = 0b01 # type field set to auto increment
+
+        cmd = (cmdBit<<7)+(msBit<<5)+reg              
+        dataTransfer = bus.read_byte_data(self.address,cmd)
+        return dataTransfer
+
+
+    def read_CRGB(self):
+
+        output=[]
+        # according to register address on the specification 
+        clearLow = self.single_access_read(0x14)
+        clearHigh = self.single_access_read(0x15)
+        redLow = self.single_access_read(0x16)
+        redHigh = self.single_access_read(0x17)
+        greenLow = self.single_access_read(0x18)
+        greenHigh = self.single_access_read(0x19)
+        blueLow = self.single_access_read(0x1A)
+        blueHigh = self.single_access_read(0x1B)
+
+        output.append(self.convert_value(clearLow, clearHigh))
+        output.append(self.convert_value(redLow, redHigh))
+        output.append(self.convert_value(greenLow, greenHigh))
+        output.append(self.convert_value(blueLow, blueHigh))
+
+        return output
