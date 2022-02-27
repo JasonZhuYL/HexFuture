@@ -11,7 +11,8 @@ TEMPERATURE_DEVICE_ADDRESS = 0x40      #7 bit address (will be left shifted to a
 class temperature_SI7021 ():
     def __init__(self,address=0x40): 
         self.address = address
-    def write_byte(self,data):
+    def startMeasure(self):
+        # 0xF3 is the measurement command 
         bus.write_byte(self.address, 0xF3)
     def read_temp_cels(self):
         data0 = bus.read_byte(0x40)
@@ -23,12 +24,10 @@ class temperature_SI7021 ():
         return humidity,celsTemp
 
 tempSensor = temperature_SI7021()
-
-time.sleep(0.3)
-tempSensor.write_byte(0x1)
-time.sleep(0.3)
+tempSensor.startMeasure()
+time.sleep(0.1)
 humidity,celsTemp = tempSensor.read_temp_cels()
-time.sleep(0.3)
+time.sleep(0.1)
 # SI7021 address, 0x40 Read data 2 bytes, Temperature
 
 
