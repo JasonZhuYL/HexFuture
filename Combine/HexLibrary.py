@@ -351,7 +351,7 @@ class ADS1115_new():
         #0x01 for config register 
         # bus.write_byte(self.address,0x01)
         print("sending ",config)
-        bus.write_word_data(self.address,0x01,config)
+        bus.write_block_data(self.address,0x01,config)
 
         # Send the config value to start the ADC conversion.
         # Explicitly break the 16-bit value down to a big endian pair of bytes. 
@@ -364,13 +364,16 @@ class ADS1115_new():
         # small offset to be sure (0.1 millisecond).
         time.sleep(1.0/128.0+0.0001)
         # Retrieve the result.
-        word2byte = bus.read_word_data(self.address,0x00)
-        [(config >> 8) & 0xFF, config & 0xFF]
+        word2byte = bus.read_block_data(self.address,0x00)
+        print("the word (two byte) is ",word2byte)
+        
+        # [(config >> 8) & 0xFF, config & 0xFF]
         data0 = (word2byte >> 8) & 0xFF
         data1 =  word2byte  & 0xFF
         print("data0: ",data0,"  data1: ", data1)
-        # result = self._device.readList(ADS1115_POINTER_CONVERSION_REGISTER, 2)
+        result = self._device.readList(ADS1115_POINTER_CONVERSION_REGISTER, 2)
         return self._conversion_value(data0,  data1)
+
     def read_adc_difference(self, differential, gain=1, data_rate=None):
         """Read the difference between two ADC channels and return the ADC value
         as a signed integer result.  Differential must be one of:
