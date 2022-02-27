@@ -16,9 +16,13 @@ client.on_connect = on_connect
 # (BROKER_ADDRESS,port=N)
 client.connect("broker.mqttdashboard.com", port=1883)
 h = 10
+hum_plot = []
+
 while True:
     # package into JSON
-    sensor_data = combine.main()
+    sensor_data, plot_data = combine.main()
+    hum_plot.append(plot_data)
+    sensor_data['humidityValue'] = hum_plot
     payload = json.dumps(sensor_data)
     # pulish message
     MSG_INFO = client.publish("IC.embedded/hexfuture/test", payload, qos=2)

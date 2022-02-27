@@ -39,11 +39,11 @@ def main():
     SOIL_GAIN = 1
     diff = 0
     mode = 0
-    hum_plot = []
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(22, GPIO.OUT)
 
     try:
+        hum_plot = []
         diff = adc.read_adc_difference(differential=mode, gain=GAIN)
         soil_sensor = adc.read_adc(2, gain=SOIL_GAIN)
 
@@ -80,7 +80,6 @@ def main():
             {'name': t, 'uv': round(soil_sensor, 2), 'amt': 2400})
         data = {
             'isPotConnected': 1,
-            'humidityValue': hum_plot,
             'humidity': soil_messsage,
             'tempurature': round(celsTemp, 2),
             'lightness': round(sum, 2),
@@ -88,7 +87,7 @@ def main():
             'rHumidity': round(humidity, 2),
             'soil humidity: ': soil_sensor
         }
-        return data
+        return data, hum_plot
         # print('Load Cell Output: {}'.format(diff))
         # print('Moisture Output: {}'.format(soil_sensor))
         # print("Light Sensor Output: ",sum)
