@@ -5,24 +5,35 @@ import time
 
 bus = smbus2.SMBus(1)
 
-time.sleep(0.3)
-bus.write_byte(0x40, 0xF3)
-time.sleep(0.3)
+TEMPERATURE_DEVICE_ADDRESS = 0x40      #7 bit address (will be left shifted to add the read write bit)
+
+
+class temperature_SI7021 ():
+    def __init__(self,address=0x40): 
+        self.address = address
+    def write_byte(self,data):
+        bus.write_byte(self.address, 0xF3)
+    def read_temp_cels(self):
+        data0 = bus.read_byte(0x40)
+        data1 = bus.read_byte(0x40)
+        # functino provided in the data sheet 
+        humidity = ((data0 * 256 + data1) * 125 / 65536.0) - 6
+        # Convert the data and output it
+        celsTemp = ((data0 * 256 + data1) * 175.72 / 65536.0) - 46.85
+        return humidity,celsTemp
+
+tempSensor = temperature_SI7021()
 
 time.sleep(0.3)
-bus.write_byte(0x40, 0xF3)
+tempSensor.write_byte(0x1)
 time.sleep(0.3)
- 
+humidity,celsTemp = tempSensor.read_temp_cels()
+time.sleep(0.3)
 # SI7021 address, 0x40 Read data 2 bytes, Temperature
-data0 = bus.read_byte(0x40)
-data1 = bus.read_byte(0x40)
+
 
 # Convert the data
-humidity = ((data0 * 256 + data1) * 125 / 65536.0) - 6
 
-# Convert the data and output it
-celsTemp = ((data0 * 256 + data1) * 175.72 / 65536.0) - 46.85
-fahrTemp = celsTemp * 1.8 + 32
 
 
 def main():
