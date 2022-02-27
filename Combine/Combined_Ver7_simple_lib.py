@@ -2,22 +2,19 @@ import HexLibrary2 as Hex
 import RPi.GPIO as GPIO
 import time 
 
-
-
+GAIN = 2
+SOIL_GAIN = 1
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(22,GPIO.OUT)
+sum=0
 
 def main():
     tempSensor = Hex.temperature_SI7021(0x40)
     humidity,celsTemp = tempSensor.measure()
 
     adc = Hex.ADS1115(0x48)
-
-    GAIN = 2
-    SOIL_GAIN = 1
     
-    GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(22,GPIO.OUT)
-
     try:
         diff = adc.read_adc_difference(0,gain = GAIN)
         soil_sensor = adc.read_adc(2, gain=SOIL_GAIN)
