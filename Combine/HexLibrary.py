@@ -444,6 +444,7 @@ class ADS1115():
         config |= ADS1115_CONFIG_COMP_QUE_DISABLE  # Disble comparator mode.
         # Send the config value to start the ADC conversion.
         # Explicitly break the 16-bit value down to a big endian pair of bytes.
+        print("sending " ,config)
         self._device.writeList(ADS1115_POINTER_CONFIG_REGISTER, [(config >> 8) & 0xFF, config & 0xFF])
         # Wait for the ADC sample to finish based on the sample rate plus a
         # small offset to be sure (0.1 millisecond).
