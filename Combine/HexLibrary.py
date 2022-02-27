@@ -451,6 +451,7 @@ class ADS1115():
         time.sleep(1.0/data_rate+0.0001)
         # Retrieve the result.
         result = self._device.readList(ADS1115_POINTER_CONVERSION_REGISTER, 2)
+        print ("the result is ",result[1])
         return self._conversion_value(result[1], result[0])
 
     def read_adc_difference(self, differential, gain=1, data_rate=None):
