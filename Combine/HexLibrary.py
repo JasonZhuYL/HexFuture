@@ -368,6 +368,7 @@ class ADS1115_new():
         [(config >> 8) & 0xFF, config & 0xFF]
         data0 = (word2byte >> 8) & 0xFF
         data1 =  word2byte  & 0xFF
+        print("data0: ",data0,"  data1: ", data1)
         # result = self._device.readList(ADS1115_POINTER_CONVERSION_REGISTER, 2)
         return self._conversion_value(data0,  data1)
     def read_adc_difference(self, differential, gain=1, data_rate=None):
