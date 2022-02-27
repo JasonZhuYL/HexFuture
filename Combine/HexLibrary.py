@@ -268,9 +268,9 @@ class LookupAdapter(Adapter):
 # Register and other configuration values:
 ADS1115_DEFAULT_ADDRESS        = 0x48
 # address of conversion register in P[1:0]
-ADS1115_POINTER_CONVERSION     = 0x00
+ADS1115_POINTER_CONVERSION_REGISTER     = 0x00
 # address of config register in P[1:0]
-ADS1115_POINTER_CONFIG         = 0x01
+ADS1115_POINTER_CONFIG_REGISTER         = 0x01
 ADS1115_CONFIG_OS_SINGLE       = 0x8000
 
 ADS1115_CONFIG_MUX_OFFSET      = 12
@@ -364,12 +364,12 @@ class ADS1115():
         config |= ADS1115_CONFIG_COMP_QUE_DISABLE  # Disble comparator mode.
         # Send the config value to start the ADC conversion.
         # Explicitly break the 16-bit value down to a big endian pair of bytes.
-        self._device.writeList(ADS1115_POINTER_CONFIG, [(config >> 8) & 0xFF, config & 0xFF])
+        self._device.writeList(ADS1115_POINTER_CONFIG_REGISTER, [(config >> 8) & 0xFF, config & 0xFF])
         # Wait for the ADC sample to finish based on the sample rate plus a
         # small offset to be sure (0.1 millisecond).
         time.sleep(1.0/data_rate+0.0001)
         # Retrieve the result.
-        result = self._device.readList(ADS1115_POINTER_CONVERSION, 2)
+        result = self._device.readList(ADS1115_POINTER_CONVERSION_REGISTER, 2)
         return self._conversion_value(result[1], result[0])
 
     def read_adc_difference(self, differential, gain=1, data_rate=None):
