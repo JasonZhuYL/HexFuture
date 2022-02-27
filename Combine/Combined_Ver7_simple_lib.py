@@ -6,7 +6,7 @@ import time
 
 
 def main():
-    tempSensor = temperature_SI7021(0x40)
+    tempSensor = Hex.temperature_SI7021(0x40)
     humidity,celsTemp = tempSensor.measure()
 
     adc = Hex.ADS1115(0x48)
