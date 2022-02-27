@@ -369,7 +369,7 @@ class ADS1115_new():
         # reading process 
         # Retrieve the result.
 
-        word = bus.read_word_data(self.address,0x01)
+        word = bus.read_word_data(self.address,0x00)
         print("the word (two byte) is ",word)
 
         # print("data0: ",word[1],"  data1: ", word[0])
@@ -379,7 +379,7 @@ class ADS1115_new():
         data0 = (word >> 8) & 0xFF
         data1 =  word  & 0xFF
         print("data0: ",data0,"  data1: ", data1)
-        result = self._device.readList(ADS1115_POINTER_CONVERSION_REGISTER, 2)
+        # result = self._device.readList(ADS1115_POINTER_CONVERSION_REGISTER, 2)
         return self._conversion_value(data0,  data1)
 
     def read_adc_difference(self, differential, gain=1, data_rate=None):
