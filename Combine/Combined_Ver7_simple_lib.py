@@ -53,7 +53,7 @@ def main():
 
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(22,GPIO.OUT)
-
+    GPIO.setwarnings(False)
 
     try:
         diff = adc.read_adc_difference(differential = mode,gain = GAIN)
