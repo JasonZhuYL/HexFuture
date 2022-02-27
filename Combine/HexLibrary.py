@@ -351,7 +351,8 @@ class ADS1115_new():
         #0x01 for config register 
         # bus.write_byte(self.address,0x01)
         print("sending ",config)
-        bus.write_block_data(self.address,0x01,[(config >> 8) & 0xFF, config & 0xFF])
+        # bus.write_block_data(self.address,0x01,[(config >> 8) & 0xFF, config & 0xFF])
+        bus.write(self.address,[0x01,(config >> 8) & 0xFF, config & 0xFF])
 
         # Send the config value to start the ADC conversion.
         # Explicitly break the 16-bit value down to a big endian pair of bytes. 
@@ -363,9 +364,14 @@ class ADS1115_new():
         # Wait for the ADC sample to finish based on the sample rate plus a
         # small offset to be sure (0.1 millisecond).
         time.sleep(1.0/128.0+0.0001)
+
+        # reading process 
+        bus.write(self.address,[0x00])
         # Retrieve the result.
-        word2byte = bus.read_block_data(self.address,0x00)
+        word2byte = bus.read(self.address,2)
         print("the word (two byte) is ",word2byte)
+
+
 
         # [(config >> 8) & 0xFF, config & 0xFF]
         data0 = (word2byte >> 8) & 0xFF
