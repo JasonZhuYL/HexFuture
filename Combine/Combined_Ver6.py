@@ -76,8 +76,7 @@ def main():
         elif soil_sensor < 8000:
             soil_messsage = "Too Humid"
         t = time.strftime("%H:%M:%S", time.localtime())
-        hum_plot.append(
-            {'name': t, 'uv': round(soil_sensor, 2), 'amt': 2400})
+        hum_plot = {'name': t, 'uv': round(soil_sensor, 2), 'amt': 2400}
         data = {
             'isPotConnected': 1,
             'humidity': soil_messsage,
