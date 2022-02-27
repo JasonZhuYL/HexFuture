@@ -267,9 +267,12 @@ class LookupAdapter(Adapter):
 
 # Register and other configuration values:
 ADS1115_DEFAULT_ADDRESS        = 0x48
+# address of conversion register in P[1:0]
 ADS1115_POINTER_CONVERSION     = 0x00
+# address of config register in P[1:0]
 ADS1115_POINTER_CONFIG         = 0x01
 ADS1115_CONFIG_OS_SINGLE       = 0x8000
+
 ADS1115_CONFIG_MUX_OFFSET      = 12
 # Maping of gain values to config register values.
 ADS1115_CONFIG_GAIN = {
@@ -282,17 +285,9 @@ ADS1115_CONFIG_GAIN = {
 }
 ADS1115_CONFIG_MODE_CONTINUOUS  = 0x0000
 ADS1115_CONFIG_MODE_SINGLE      = 0x0100
-# Mapping of data/sample rate to config register values for ADS1015 (faster).
-ADS1015_CONFIG_DR = {
-    128:   0x0000,
-    250:   0x0020,
-    490:   0x0040,
-    920:   0x0060,
-    1600:  0x0080,
-    2400:  0x00A0,
-    3300:  0x00C0
-}
+
 # Mapping of data/sample rate to config register values for ADS1115 (slower).
+# DR is set in the config register 
 ADS1115_CONFIG_DR = {
     8:    0x0000,
     16:   0x0020,
@@ -320,9 +315,9 @@ class ADS1115():
             i2c = I2C
         self._device = i2c.get_i2c_device(address, **kwargs)
         
-    def _data_rate_default(self):
-        # Default from datasheet page 16, config register DR bit default.
-        return 128
+    # def _data_rate_default(self):
+    #     # Default from datasheet page 16, config register DR bit default.
+    #     return 128
     
     def _data_rate_config(self, data_rate):
         if data_rate not in ADS1115_CONFIG_DR:
