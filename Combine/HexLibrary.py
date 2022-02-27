@@ -379,7 +379,8 @@ class ADS1115_new():
         print("printing the read value now")
         for value in read1:
             print(value)
-        return self._conversion_value(read1[1],read1[0])
+        print(list(read1))
+        return self._conversion_value(int(read1[1]),int(read1[0]))
 
         # word = bus.read_word_data(self.address,0x00)
         # print("the word (two byte) is ",word)
