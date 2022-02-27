@@ -264,7 +264,7 @@ class LookupAdapter(Adapter):
 
 
 
-bus = smbus2.i2c_msg
+bus = smbus2.SMBus(1)
 
 
 # Register and other configuration values:
@@ -351,7 +351,8 @@ class ADS1115_new():
         #0x01 for config register 
         # bus.write_byte(self.address,0x01)
         # bus.write_block_data(self.address,0x01,[(config >> 8) & 0xFF, config & 0xFF])
-        bus.write(self.address,[0x01,(config >> 8) & 0xFF, config & 0xFF])
+        # bus.write(self.address,[0x01,(config >> 8) & 0xFF, config & 0xFF])
+        bus.write_word_data(self.address,0x01,config)
         print("sending ",config)
 
         # Send the config value to start the ADC conversion.
@@ -366,17 +367,17 @@ class ADS1115_new():
         time.sleep(1.0/128.0+0.0001)
 
         # reading process 
-        bus.write(self.address,[0x00])
         # Retrieve the result.
-        word2byte = bus.read(self.address,2)
-        print("the word (two byte) is ",word2byte)
 
-        print("data0: ",word2byte[1],"  data1: ", word2byte[0])
+        word = bus.read_word_data(self.address,0x00)
+        print("the word (two byte) is ",word)
+
+        print("data0: ",word[1],"  data1: ", word[0])
 
 
         # [(config >> 8) & 0xFF, config & 0xFF]
-        data0 = (word2byte >> 8) & 0xFF
-        data1 =  word2byte  & 0xFF
+        data0 = (word >> 8) & 0xFF
+        data1 =  word  & 0xFF
         print("data0: ",data0,"  data1: ", data1)
         result = self._device.readList(ADS1115_POINTER_CONVERSION_REGISTER, 2)
         return self._conversion_value(data0,  data1)
