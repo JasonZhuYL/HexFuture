@@ -1,69 +1,27 @@
-import HexLibrary as Hex
+import HexLibrary2 as Hex
 import RPi.GPIO as GPIO
-import smbus2
 import time 
 
-bus = smbus2.SMBus(1)
-
-TEMPERATURE_DEVICE_ADDRESS = 0x40      #7 bit address (will be left shifted to add the read write bit)
-
-
-class temperature_SI7021 ():
-    def __init__(self,address=0x40): 
-        self.address = address
-    def startMeasure(self):
-        # 0xF3 is the measurement command 
-        bus.write_byte(self.address, 0xF3)
-    def read_temp_cels(self):
-        data0 = bus.read_byte(0x40)
-        data1 = bus.read_byte(0x40)
-        # functino provided in the data sheet 
-        humidity = ((data0 * 256 + data1) * 125 / 65536.0) - 6
-        # Convert the data and output it
-        celsTemp = ((data0 * 256 + data1) * 175.72 / 65536.0) - 46.85
-        return humidity,celsTemp
-
-tempSensor = temperature_SI7021()
-tempSensor.startMeasure()
-time.sleep(0.1)
-humidity,celsTemp = tempSensor.read_temp_cels()
-time.sleep(0.1)
-# SI7021 address, 0x40 Read data 2 bytes, Temperature
-
-
-# Convert the data
 
 
 
 def main():
-    as7262 = Hex.AS7262()
+    tempSensor = temperature_SI7021(0x40)
+    humidity,celsTemp = tempSensor.measure()
 
-    as7262.set_gain(1) # 1, 3.7, 16, 64
-    as7262.set_integration_time(10) #1 to 255 x 2.8ms exposure
-    #mode 0 - bank 1 only continuous, mode 1 - bank 2 only continuous, mode 2 - both banks continuous, mode 3 - both banks single read 
-    as7262.set_measurement_mode(2) #2 all colours continuous
-    # as7262.set_illumination_led_current(12.5) #12.5mA 25mA 50mA 100mA
-    # as7262.set_illumination_led(1) # led on
-    adc = Hex.ADS1115_new(0x48)
+    adc = Hex.ADS1115(0x48)
+
     GAIN = 2
     SOIL_GAIN = 1
-    diff = 0
-    mode = 0
     
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(22,GPIO.OUT)
 
     try:
-        diff = adc.read_adc_difference(differential = mode,gain = GAIN)
+        diff = adc.read_adc_difference(0,gain = GAIN)
         soil_sensor = adc.read_adc(2, gain=SOIL_GAIN)
 
-        values = as7262.get_calibrated_values() #get values from scan
-        
-        spec = [float(i) for i in list(values)] #convert results from string to float				
-        sum=0
-        for j in range(len(spec)):
-            sum += spec[j]
         if diff>=0:
             weight_messsage = "Water is enough"
         else:
