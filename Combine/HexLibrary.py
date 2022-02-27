@@ -264,7 +264,7 @@ class LookupAdapter(Adapter):
 
 
 
-bus = smbus2.SMBus(1)
+bus = smbus2.i2c_msg
 
 
 # Register and other configuration values:
