@@ -369,10 +369,10 @@ class ADS1115_new():
         # reading process 
         # Retrieve the result.
 
-        word = bus.read_word_data(self.address,0x00)
+        word = bus.read_word_data(self.address,0x01)
         print("the word (two byte) is ",word)
 
-        print("data0: ",word[1],"  data1: ", word[0])
+        # print("data0: ",word[1],"  data1: ", word[0])
 
 
         # [(config >> 8) & 0xFF, config & 0xFF]
