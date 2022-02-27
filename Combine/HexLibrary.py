@@ -357,7 +357,8 @@ class ADS1115():
         # Get the default data rate if none is specified (default differs between
         # ADS1015 and ADS1115).
         if data_rate is None:
-            data_rate = self._data_rate_default()
+            # data_rate = self._data_rate_default()
+            data_rate = 128
         # Set the data rate (this is controlled by the subclass as it differs
         # between ADS1015 and ADS1115).
         config |= self._data_rate_config(data_rate)
