@@ -5,8 +5,8 @@ import time
 GAIN = 2
 SOIL_GAIN = 1
 GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(22,GPIO.OUT)
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(22,GPIO.OUT,initial=GPIO.LOW)
 sum=0
 
 def main():
@@ -35,7 +35,6 @@ def main():
             GPIO.output(22,GPIO.HIGH)
             time.sleep(1)                   # Delay for 1 second
             GPIO.output(22, GPIO.LOW)  # Turn LED off
-            time.sleep(1)                   # Delay for 1 second
         elif soil_sensor > 8000:
             soil_messsage = "Moisture is on suitable level"
         elif soil_sensor< 8000:
