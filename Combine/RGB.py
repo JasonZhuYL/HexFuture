@@ -1,30 +1,39 @@
-# import HexLibrary2 as Hex
-import colorlib as Hex
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
+# Simple demo of the TCS34725 color sensor.
+# Will detect the color from the sensor and print it out every second.
 import time
-
-# def lux(self, R, G , B)
-#     R_Coef = 0.136  # |
-#     G_Coef = 1.0  # | used in lux computation
-#     B_Coef = -0.444  # |
-#     # IR Rejection (DN40 3.1)
-
-#     # Lux Calculation (DN40 3.2)
-#     G1 = R_Coef * R + G_Coef * G + B_Coef * B
-#     lux = G1 / CPL
+import board
+import adafruit_tcs34725
 
 
-def main():
-    RGB = Hex.ColourSensor(0x29)
+# Create sensor object, communicating over the board's default I2C bus
+i2c = board.I2C()  # uses board.SCL and board.SDA
+sensor = adafruit_tcs34725.TCS34725(i2c)
 
-    try:
-        while True:
-            data = RGB.read_CRGB()
-            print('Clear '+str(data[0])+' Red '+str(data[1])+' Green '+
-                str(data[2])+' Blue '+str(data[3]))
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("stop")
+# Change sensor integration time to values between 2.4 and 614.4 milliseconds
+# sensor.integration_time = 150
 
-if __name__ == '__main__':
-    print ("Starting...")
-    main()
+# Change sensor gain to 1, 4, 16, or 60
+# sensor.gain = 4
+
+# Main loop reading color and printing it every second.
+while True:
+    # Raw data from the sensor in a 4-tuple of red, green, blue, clear light component values
+    # print(sensor.color_raw)
+
+    color = sensor.color
+    color_rgb = sensor.color_rgb_bytes
+    print(
+        "RGB color as 8 bits per channel int: #{0:02X} or as 3-tuple: {1}".format(
+            color, color_rgb
+        )
+    )
+
+    # Read the color temperature and lux of the sensor too.
+    temp = sensor.color_temperature
+    lux = sensor.lux
+    print("Temperature: {0}K Lux: {1}\n".format(temp, lux))
+    # Delay for a second and repeat.
+    time.sleep(1.0)
