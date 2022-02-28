@@ -49,7 +49,7 @@ def main():
             soil_messsage = "The soil too wet!"
         
         # Convert dirt humidity raw data into percentage
-        dirt_humidity = ((soil_sensor) / (26000) ) * 100
+        dirt_humidity = 100 - ( ((soil_sensor) / (26000) ) * 100 )
 
         data = {
         'isPotConnected':1,
