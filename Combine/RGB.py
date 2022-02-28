@@ -1,4 +1,5 @@
-import HexLibrary2 as Hex
+# import HexLibrary2 as Hex
+import colorlib as Hex
 import time
 
 # def lux(self, R, G , B)
