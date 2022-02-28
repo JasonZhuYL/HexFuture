@@ -12,7 +12,14 @@ sum=0
 def main():
     tempSensor = Hex.temperature_SI7021(0x40)
     humidity,celsTemp = tempSensor.measure()
-
+    # Convert celsTemp into string to display in WebApp through json format below
+    if celsTemp < 6.0:
+        celsTemp_str = str(round(celsTemp,2)) + "°C (Temperature is too low!)"
+    elif celsTemp > 30.0:
+        celsTemp_str = str(round(celsTemp,2)) + "°C (Temperature is too high!)"
+    else:
+        celsTemp_str = str(round(celsTemp,2)) + "°C (Temperature is suitable)"
+    # "celsTemp .C (Temperature is suitable)"
     adc = Hex.ADS1115(0x48)
     
     try:
@@ -22,15 +29,16 @@ def main():
         if diff>=0:
             weight_messsage = "Water is enough"
         else:
-            weight_messsage = "No water"
+            weight_messsage = "Refill water!"
+        
         # >25000; Sensor not inserted into soil
         # >22000; Soil is very dry
         # >8000 <18000; Moisture is on suitable level
         # <8000; Soil is too humid
         if soil_sensor>=25000:
-            soil_messsage = "Sensor not inserted into soil"
+            soil_messsage = "Sensor not inserted into soil!"
         elif soil_sensor>22000:
-            soil_messsage = "Soil is very dry"
+            soil_messsage = "Soil is very dry! Attempting to pump water to the plant..."
             print("blinking")
             GPIO.output(22,GPIO.HIGH)
             time.sleep(1)                   # Delay for 1 second
@@ -38,12 +46,16 @@ def main():
         elif soil_sensor > 8000:
             soil_messsage = "Moisture is on suitable level"
         elif soil_sensor< 8000:
-            soil_messsage = "Too Humid"
+            soil_messsage = "The soil too wet!"
+        
+        # Convert dirt humidity raw data into percentage
+        dirt_humidity = ((soil_sensor) / (26000) ) * 100
+
         data = {
         'isPotConnected':1,
-        'humidityValue' : round(soil_sensor,2),
+        'humidityValue' : round(dirt_humidity,2),
         'humidity': soil_messsage,
-        'tempurature':round(celsTemp,2),
+        'tempurature':  celsTemp_str,
         'lightness': round(sum,2),
         'weight': weight_messsage,
         'rHumidity': round(humidity,2),
