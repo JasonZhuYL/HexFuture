@@ -6,7 +6,7 @@ GAIN = 2
 SOIL_GAIN = 1
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
-GPIO.setup(22,GPIO.OUT,initial=GPIO.LOW)
+GPIO.setup(23,GPIO.OUT,initial=GPIO.LOW)
 sum=0
 
 def main():
@@ -32,9 +32,9 @@ def main():
         elif soil_sensor>22000:
             soil_messsage = "Soil is very dry"
             print("blinking")
-            GPIO.output(22,GPIO.HIGH)
+            GPIO.output(23,GPIO.HIGH)
             time.sleep(1)                   # Delay for 1 second
-            GPIO.output(22, GPIO.LOW)  # Turn LED off
+            GPIO.output(23, GPIO.LOW)  # Turn LED off
         elif soil_sensor > 8000:
             soil_messsage = "Moisture is on suitable level"
         elif soil_sensor< 8000:
