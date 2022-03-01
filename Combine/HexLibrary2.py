@@ -101,8 +101,6 @@ class ADS1115():
 
 
 
-
-
 # Start of color sensor 
 TCS34725_DEFAULT_ADDRESS = 0x29
 
@@ -123,9 +121,9 @@ TCS34725_REG_CDATAL = 0x14 # Clear/IR channel low data register
 # TCS34725_REG_BDATAH = 0x1B # Blue ADC high data register
 
 # TCS34725 Enable Register Configuration
-TCS34725_REG_ENABLE_SAI = 0x40 # Sleep After Interrupt
-TCS34725_REG_ENABLE_AIEN = 0x10 # ALS Interrupt Enable
-TCS34725_REG_ENABLE_WEN = 0x08 # Wait Enable
+# TCS34725_REG_ENABLE_SAI = 0x40 # Sleep After Interrupt
+# TCS34725_REG_ENABLE_AIEN = 0x10 # ALS Interrupt Enable
+# TCS34725_REG_ENABLE_WEN = 0x08 # Wait Enable
 TCS34725_REG_ENABLE_AEN = 0x02 # ADC Enable
 TCS34725_REG_ENABLE_PON = 0x01 # Power ON
 
