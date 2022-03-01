@@ -1,4 +1,5 @@
 from fcntl import F_SEAL_SEAL
+from operator import truediv
 import time
 import json
 import paho.mqtt.client as mqtt
@@ -43,11 +44,13 @@ while True:
     if sensor_data['Ambient Light Luminance'] > 25000:
         lumtotal += sensor_data['Ambient Light Luminance']/10
 
-    if lumtotal > 35000:
+    if lumtotal > 10000:
         if direction == False :
             p.ChangeDutyCycle(12.5)
+            direction=True
         else:
             p.ChangeDutyCycle(2.5)
+            direction=False
         lumtotal=0
     
     if sensor_data['soil humidity'] > 22000:
