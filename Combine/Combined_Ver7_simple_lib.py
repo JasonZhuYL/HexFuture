@@ -21,8 +21,8 @@ def main():
     #Calculate cumulative luminosity
     if lum['l'] > 25000: 
         lumTotal += lum['l']/10
-    
-    
+    print(lumTotal)
+
     if lumTotal > 35000: 
         lumTotal = 0 
         print("Sunflower system activated")
