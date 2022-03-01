@@ -78,6 +78,7 @@ def main():
             soil_messsage = "The soil too wet!"
 
         if lum['l'] > 25000: 
+            time.sleep(1)
             p.ChangeDutyCycle(12.5)
 
         
