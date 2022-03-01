@@ -95,4 +95,5 @@ if __name__ == '__main__':
     # print ("Temperature in Fahrenheit is : %.2f F" %fahrTemp)
     while True: 
         main()
+        print(lumTotal)
         time.sleep(1)
