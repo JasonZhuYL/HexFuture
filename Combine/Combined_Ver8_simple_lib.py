@@ -13,11 +13,11 @@ sum=0
 global threshold
 treshold = 0
 
-servoPIN = 17
-GPIO.setup(servoPIN, GPIO.OUT)
+# servoPIN = 17
+# GPIO.setup(servoPIN, GPIO.OUT)
 
-p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
-p.start(2.5) # Initialization
+# p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
+# p.start(2.5) # Initialization
 
 def set_threshold(thre):
     global threshold
@@ -77,9 +77,9 @@ def main():
         elif soil_sensor< 8000:
             soil_messsage = "The soil too wet!"
 
-        if lum['l'] > 25000: 
-            time.sleep(1)
-            p.ChangeDutyCycle(12.5)
+        # if lum['l'] > 25000: 
+            # time.sleep(1)
+            # p.ChangeDutyCycle(12.5)
 
         
         # Convert dirt humidity raw data into percentage
@@ -94,8 +94,8 @@ def main():
         'lightness': round(lum['l'],2),
         'weight': weight_messsage,
         'rHumidity': round(humidity,2),
-        'soil humidity: ':soil_sensor
-        # 'Ambient Light Luminance: ': lum['l']
+        'soil humidity':soil_sensor,
+        'Ambient Light Luminance': lum['l']
         }
         print (data)
         return data, hum_plot
@@ -114,7 +114,7 @@ if __name__ == '__main__':
     # print ("Temperature in Celsius is : %.2f C" %celsTemp)
     # print ("Temperature in Fahrenheit is : %.2f F" %fahrTemp)
     # lumTotal = 0
-    while True: 
-        main()
+    # while True: 
+    main()
         # print(lumTotal)
-        time.sleep(1)
+        # time.sleep(1)
