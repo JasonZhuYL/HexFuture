@@ -17,10 +17,12 @@ def main():
     lumSensor = Hex.TCS34725()
     lum = lumSensor.readluminance()
 
-
+    
     #Calculate cumulative luminosity
     if lum['l'] > 25000: 
         lumTotal += lum['l']/10
+    
+    
     if lumTotal > 35000: 
         lumTotal = 0 
         print("Sunflower system activated")
