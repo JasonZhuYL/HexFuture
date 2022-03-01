@@ -5,9 +5,11 @@ import paho.mqtt.client as mqtt
 import Combined_Ver7_simple_lib as combine
 import RPi.GPIO as GPIO
 
+GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 servoPIN = 17
 GPIO.setup(servoPIN, GPIO.OUT)
+GPIO.setup(22,GPIO.OUT,initial=GPIO.LOW)
 p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
 p.start(2.5) # Initialization
 
@@ -48,6 +50,12 @@ while True:
             p.ChangeDutyCycle(2.5)
         lumtotal=0
     
+    if sensor_data['soil humidity'] > 22000:
+        GPIO.output(22,GPIO.HIGH)
+    
+    if sensor_data['soil humidity'] < 22000:
+        GPIO.output(22, GPIO.LOW) 
+
     hum_plot.append(plot_data)
     sensor_data['humidityValue'] = hum_plot
     payload = json.dumps(sensor_data)
