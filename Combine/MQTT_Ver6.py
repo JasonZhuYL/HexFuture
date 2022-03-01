@@ -49,7 +49,7 @@ while True:
             p.ChangeDutyCycle(12.5)
             direction=True
         else:
-            p.ChangeDutyCycle(1)
+            p.ChangeDutyCycle(2)
             direction=False
         lumtotal=0
     
