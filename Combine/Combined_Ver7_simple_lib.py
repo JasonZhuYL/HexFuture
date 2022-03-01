@@ -9,7 +9,7 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(22,GPIO.OUT,initial=GPIO.LOW)
 sum=0
-lumTotal = 0
+# lumTotal = 0
 
 def main():
     tempSensor = Hex.temperature_SI7021(0x40)
@@ -19,9 +19,9 @@ def main():
 
     
     #Calculate cumulative luminosity
-    if lum['l'] > 25000: 
-        lumTotal += lum['l']/10
-    #print(lumTotal)
+    # if lum['l'] > 25000: 
+    #     lumTotal += lum['l']/10
+    # #print(lumTotal)
 
     # if lumTotal > 35000: 
     #     lumTotal = 0 
@@ -65,7 +65,8 @@ def main():
         
         # Convert dirt humidity raw data into percentage
         dirt_humidity = 100 - ( ((soil_sensor) / (26000) ) * 100 )
-
+        t = time.strftime("%H:%M:%S", time.localtime())
+        hum_plot = {'name': t, 'uv': round(dirt_humidity, 2), 'amt': 2400}
         data = {
         'isPotConnected':1,
         'humidityValue' : round(dirt_humidity,2),
@@ -78,7 +79,7 @@ def main():
         'Ambient Light Luminance: ': lum['l']
         }
         print (data)
-        return data
+        return data, hum_plot
         # print('Load Cell Output: {}'.format(diff))
         # print('Moisture Output: {}'.format(soil_sensor))	 
         # print("Light Sensor Output: ",sum)
@@ -93,7 +94,8 @@ if __name__ == '__main__':
     # print ("Relative Humidity is : %.2f %%" %humidity)
     # print ("Temperature in Celsius is : %.2f C" %celsTemp)
     # print ("Temperature in Fahrenheit is : %.2f F" %fahrTemp)
+    # lumTotal = 0
     while True: 
         main()
-        print(lumTotal)
+        # print(lumTotal)
         time.sleep(1)
