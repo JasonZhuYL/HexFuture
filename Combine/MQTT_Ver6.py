@@ -12,7 +12,7 @@ servoPIN = 17
 GPIO.setup(servoPIN, GPIO.OUT)
 GPIO.setup(22,GPIO.OUT,initial=GPIO.LOW)
 p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
-p.start(2.5) # Initialization
+p.start(3) # Initialization
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code: " + str(rc))
@@ -49,7 +49,7 @@ while True:
             p.ChangeDutyCycle(12.5)
             direction=True
         else:
-            p.ChangeDutyCycle(2.5)
+            p.ChangeDutyCycle(3)
             direction=False
         lumtotal=0
     
