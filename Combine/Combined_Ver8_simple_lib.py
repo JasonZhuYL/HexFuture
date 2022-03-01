@@ -28,15 +28,6 @@ def main():
     lumSensor = Hex.TCS34725()
     lum = lumSensor.readluminance()
 
-    
-    #Calculate cumulative luminosity
-    # if lum['l'] > 25000: 
-    #     lumTotal += lum['l']/10
-    # #print(lumTotal)
-
-    # if lumTotal > 35000: 
-    #     lumTotal = 0 
-    #     print("Sunflower system activated")
 
     # Convert celsTemp into string to display in WebApp through json format below
     if celsTemp < 6.0:

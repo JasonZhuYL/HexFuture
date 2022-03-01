@@ -2,7 +2,7 @@ from fcntl import F_SEAL_SEAL
 import time
 import json
 import paho.mqtt.client as mqtt
-import Combined_Ver7_simple_lib as combine
+import Combined_Ver8_simple_lib as combine
 import RPi.GPIO as GPIO
 
 GPIO.setwarnings(False)
