@@ -24,7 +24,7 @@ client.on_connect = on_connect
 client.connect("broker.mqttdashboard.com", port=1883)
 h = 10
 hum_plot = []
-
+client.subscribe('IC.embedded/hexfuture/type',qos=2)
 while True:
     # package into JSON
     sensor_data, plot_data = combine.main()
