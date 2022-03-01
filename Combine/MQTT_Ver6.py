@@ -33,13 +33,14 @@ client.on_message = on_message
 #client.connect("test.mosquitto.org", 8884)
 
 client.connect("broker.mqttdashboard.com", port=1883)
-client.subscribe('IC.embedded/hexfuture/type',qos=2)
+
 h = 10
 hum_plot = []
 lumtotal = 0
 direction = False
 
 while True:
+    client.subscribe('IC.embedded/hexfuture/type',qos=2)
     # package into JSON
     sensor_data, plot_data = combine.main()
 
