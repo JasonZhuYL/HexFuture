@@ -64,10 +64,11 @@ def main():
             soil_messsage = "Soil is very dry! Attempting to pump water to the plant..."
             print("blinking")
             GPIO.output(22,GPIO.HIGH)
-            time.sleep(5)                   # Delay for 1 second
-            GPIO.output(22, GPIO.LOW)  # Turn LED off
+            # time.sleep(5)                   # Delay for 1 second
         elif soil_sensor > 8000:
             soil_messsage = "Moisture is on suitable level"
+            GPIO.output(22, GPIO.LOW)  # Turn LED off
+
         elif soil_sensor< 8000:
             soil_messsage = "The soil too wet!"
         
