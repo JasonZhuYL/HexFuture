@@ -1,5 +1,7 @@
 # Embedded System Coursework 1 (Group HexFuture)
 
+## Overall Architecture for HexPot (Smart Pot for Plant)
+
 ![alt text](pot.jpg)
 
 ## Explanation for code
