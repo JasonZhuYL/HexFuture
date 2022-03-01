@@ -6,7 +6,7 @@ import sys
 GAIN = 2
 SOIL_GAIN = 1
 GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
 GPIO.setup(22,GPIO.OUT,initial=GPIO.LOW)
 sum=0
 # lumTotal = 0
@@ -103,7 +103,7 @@ if __name__ == '__main__':
     # print ("Temperature in Celsius is : %.2f C" %celsTemp)
     # print ("Temperature in Fahrenheit is : %.2f F" %fahrTemp)
     # lumTotal = 0
-    while True: 
-        main()
+    # while True: 
+    main()
         # print(lumTotal)
-        time.sleep(1)
+        # time.sleep(1)
