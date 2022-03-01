@@ -9,6 +9,7 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(22,GPIO.OUT,initial=GPIO.LOW)
 sum=0
+global lumTotal
 lumTotal = 0
 
 def main():
@@ -95,4 +96,4 @@ if __name__ == '__main__':
     # print ("Temperature in Fahrenheit is : %.2f F" %fahrTemp)
     while True: 
         main()
-        time.sleep()
+        time.sleep(1)
