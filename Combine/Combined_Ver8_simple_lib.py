@@ -20,6 +20,7 @@ treshold = 0
 def set_threshold(thre):
     global threshold
     threshold = thre
+    print(threshold)
 
 def main():
     global threshold
