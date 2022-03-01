@@ -10,8 +10,16 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(22,GPIO.OUT,initial=GPIO.LOW)
 sum=0
 # lumTotal = 0
+global threshold
+treshold = 0
+
+
+def set_threshold(thre):
+    global threshold
+    threshold = thre
 
 def main():
+    global threshold
     tempSensor = Hex.temperature_SI7021(0x40)
     humidity,celsTemp = tempSensor.measure()
     lumSensor = Hex.TCS34725()
