@@ -27,6 +27,7 @@ def on_message(client, userdata, message):
 
 client = mqtt.Client()
 client.on_connect = on_connect
+client.on_message = on_message
 # set private key
 #client.tls_set(ca_certs="mosquitto.org.crt", certfile="client.crt",keyfile='client.key')
 #client.connect("test.mosquitto.org", 8884)
