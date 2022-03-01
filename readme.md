@@ -14,7 +14,7 @@ This file is a library that contains implementation for accessing low-level sens
 ```bash
 Main_final.py
 ```
-This file is contains code that runs the functions within HexLibrary_final.py and package the data from sensors into JSON format.
+This file contains code that runs the functions within HexLibrary_final.py and package the data from sensors into JSON format.
 
 ```bash
 MQTT_final.py
