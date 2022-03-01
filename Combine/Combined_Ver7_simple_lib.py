@@ -1,6 +1,7 @@
 import HexLibrary2 as Hex
 import RPi.GPIO as GPIO
 import time 
+import sys 
 
 GAIN = 2
 SOIL_GAIN = 1
@@ -12,6 +13,9 @@ sum=0
 def main():
     tempSensor = Hex.temperature_SI7021(0x40)
     humidity,celsTemp = tempSensor.measure()
+    lumSensor = Hex.TCS34725()
+    lum = lumSensor.readluminance()
+
     # Convert celsTemp into string to display in WebApp through json format below
     if celsTemp < 6.0:
         celsTemp_str = str(round(celsTemp,2)) + "°C (Temperature is too low!)"
@@ -59,7 +63,8 @@ def main():
         'lightness': round(sum,2),
         'weight': weight_messsage,
         'rHumidity': round(humidity,2),
-        'soil humidity: ':soil_sensor
+        'soil humidity: ':soil_sensor,
+        'Ambient Light Luminance: ': lum['l']
         }
         print (data)
         return data
@@ -69,8 +74,7 @@ def main():
         #print("Spec: ",spec)
     except KeyboardInterrupt:
             sys.stdout.close()
-            as7262.set_measurement_mode(3) #Switch to scan on demand
-            #as7262.set_illumination_led(0) #light off
+
 
 if __name__ == '__main__':
     print ("Starting...")
