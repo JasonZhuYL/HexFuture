@@ -70,7 +70,7 @@ def main():
 
         
         # Convert dirt humidity raw data into percentage
-        dirt_humidity = 100 - ( ((soil_sensor) / (26000) ) * 100 )
+        dirt_humidity = 100 - ( ((soil_sensor) / (32000) ) * 100 )
         t = time.strftime("%H:%M:%S", time.localtime())
         hum_plot = {'name': t, 'uv': round(dirt_humidity, 2), 'amt': 2400}
         data = {
