@@ -69,7 +69,8 @@ def main():
             # time.sleep(1)
             # p.ChangeDutyCycle(12.5)
 
-        
+        motor = False
+        pump = False
         # Convert dirt humidity raw data into percentage
         dirt_humidity = 100 - ( ((soil_sensor) / (32000) ) * 100 )
         t = time.strftime("%H:%M", time.localtime())
@@ -83,7 +84,9 @@ def main():
         'weight': weight_messsage,
         'rHumidity': round(humidity,2),
         'soil humidity':soil_sensor,
-        'Ambient Light Luminance': lum['l']
+        'Ambient Light Luminance': lum['l'],
+        'motor': motor,
+        'waterpump1': pump
         }
         print (data)
         return data, hum_plot

@@ -50,16 +50,20 @@ while True:
     if lumtotal > 10000:
         if direction == False :
             p.ChangeDutyCycle(12.5)
+            sensor_data['motor'] = True
             direction=True
         else:
             p.ChangeDutyCycle(2)
+            sensor_data['motor'] = True
             direction=False
         lumtotal=0
     
     if sensor_data['soil humidity'] > 22000:
+        sensor_data['waterpump1'] = True
         GPIO.output(22,GPIO.HIGH)
     
     if sensor_data['soil humidity'] < 22000:
+        sensor_data['waterpump1'] = False
         GPIO.output(22, GPIO.LOW) 
 
     hum_plot.append(plot_data)
@@ -69,4 +73,5 @@ while True:
     MSG_INFO = client.publish("IC.embedded/hexfuture/data", payload, qos=2)
     mqtt.error_string(MSG_INFO.rc)
     print(payload)
+    sensor_data['motor'] = False
     time.sleep(60)
