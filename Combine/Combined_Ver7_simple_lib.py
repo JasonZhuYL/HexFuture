@@ -9,7 +9,6 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(22,GPIO.OUT,initial=GPIO.LOW)
 sum=0
-global lumTotal
 lumTotal = 0
 
 def main():
@@ -22,11 +21,11 @@ def main():
     #Calculate cumulative luminosity
     if lum['l'] > 25000: 
         lumTotal += lum['l']/10
-    print(lumTotal)
+    #print(lumTotal)
 
-    if lumTotal > 35000: 
-        lumTotal = 0 
-        print("Sunflower system activated")
+    # if lumTotal > 35000: 
+    #     lumTotal = 0 
+    #     print("Sunflower system activated")
 
     # Convert celsTemp into string to display in WebApp through json format below
     if celsTemp < 6.0:
