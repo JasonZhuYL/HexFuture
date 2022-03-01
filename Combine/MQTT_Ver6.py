@@ -49,7 +49,7 @@ while True:
             p.ChangeDutyCycle(12.5)
             direction=True
         else:
-            p.ChangeDutyCycle(3)
+            p.ChangeDutyCycle(1)
             direction=False
         lumtotal=0
     
@@ -66,4 +66,4 @@ while True:
     MSG_INFO = client.publish("IC.embedded/hexfuture/data", payload, qos=2)
     mqtt.error_string(MSG_INFO.rc)
     print(payload)
-    time.sleep(5)
+    time.sleep(1)
