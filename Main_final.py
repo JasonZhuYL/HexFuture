@@ -6,24 +6,19 @@ import sys
 GAIN = 2
 SOIL_GAIN = 1
 
-sum=0
-# lumTotal = 0
 global threshold
 treshold = 0
 
-# servoPIN = 17
-# GPIO.setup(servoPIN, GPIO.OUT)
-
-# p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
-# p.start(2.5) # Initialization
-
+# Setting threshold for different plants (e.g. changing soil humidity threshold)
 def set_threshold(thre):
     global threshold
     threshold = thre
     print(threshold)
 
 def main():
+    # Threshold for future use to give different threshold for different plants
     global threshold
+
     tempSensor = Hex.temperature_SI7021(0x40)
     humidity,celsTemp = tempSensor.measure()
     lumSensor = Hex.TCS34725()
@@ -37,13 +32,17 @@ def main():
         celsTemp_str = str(round(celsTemp,2)) + "°C (Temperature is too high!)"
     else:
         celsTemp_str = str(round(celsTemp,2)) + "°C (Temperature is suitable)"
-    # "celsTemp .C (Temperature is suitable)"
+
+
     adc = Hex.ADS1115(0x48)
     
     try:
+
+        # Reading data from load cell
         diff = adc.read_adc_difference(0,gain = GAIN)
         soil_sensor = adc.read_adc(2, gain=SOIL_GAIN)
 
+        # Checking water level in the compartment of pot
         if diff>=0:
             weight_messsage = "Water is enough"
         else:
@@ -58,23 +57,24 @@ def main():
         elif soil_sensor>22000:
             soil_messsage = "Soil is very dry! Attempting to pump water to the plant..."
             print("blinking")
-            # time.sleep(5)                   # Delay for 1 second
         elif soil_sensor > 8000:
             soil_messsage = "Moisture is on suitable level"
 
         elif soil_sensor< 8000:
             soil_messsage = "The soil too wet!"
 
-        # if lum['l'] > 25000: 
-            # time.sleep(1)
-            # p.ChangeDutyCycle(12.5)
-
+        # Indicator for showing motor and pump usage in frontend
         motor = False
         pump = False
+
         # Convert dirt humidity raw data into percentage
         dirt_humidity = 100 - ( ((soil_sensor) / (32000) ) * 100 )
+
+        # Setting timeframe for plotting and sending data for real-time plotting use in WebApp
         t = time.strftime("%H:%M", time.localtime())
         hum_plot = {'name': t, 'uv': round(dirt_humidity, 2), 'amt': 2400}
+
+        # Putting data in JSON format for frontend use
         data = {
         'isPotConnected':1,
         'humidityValue' : round(dirt_humidity,2),
@@ -88,24 +88,15 @@ def main():
         'motor': motor,
         'waterpump1': pump
         }
+
+        # Debug use
         print (data)
         return data, hum_plot
-        # print('Load Cell Output: {}'.format(diff))
-        # print('Moisture Output: {}'.format(soil_sensor))	 
-        # print("Light Sensor Output: ",sum)
-        #print("Spec: ",spec)
+
     except KeyboardInterrupt:
-            sys.stdout.close()
+            print("Terminating...")
 
 
 if __name__ == '__main__':
     print ("Starting...")
-    # sys.stdout = open("train.csv", "w")
-    # print ("Relative Humidity is : %.2f %%" %humidity)
-    # print ("Temperature in Celsius is : %.2f C" %celsTemp)
-    # print ("Temperature in Fahrenheit is : %.2f F" %fahrTemp)
-    # lumTotal = 0
-    # while True: 
     main()
-        # print(lumTotal)
-        # time.sleep(1)
