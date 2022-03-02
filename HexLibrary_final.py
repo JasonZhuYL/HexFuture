@@ -1,11 +1,30 @@
+# Copyright (c) 2022 HexFuture Inc.
+# Author: HexFuture
+# All the codes below is written by HexFuture 
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
 import smbus2
 import time
 
-
 bus = smbus2.SMBus(1)
 
-
-# SI7021 address, 0x40 
+# SI7021 default address, 0x40 
 class temperature_SI7021 ():
     def __init__(self,address=0x40): 
         self.address = address
@@ -26,6 +45,7 @@ class temperature_SI7021 ():
         time.sleep(0.01)
         return self.read_temp_cels()
 
+# ADS1115 Library 
 ADS1115_CONFIG_GAIN = {
     2/3: 0x0000,
     1:   0x0200,
@@ -85,7 +105,6 @@ class ADS1115():
         result = list(read1)
         return self._conversion_value(int(result[1]),int(result[0]))
 
-
     def read_adc_difference(self, differential, gain=1, data_rate=None):
         # Read the difference between two ADC channels and return the ADC value
         # as a signed integer result.  Differential must be one of:
@@ -102,48 +121,11 @@ class ADS1115():
 
 
 # Start of color sensor 
+# The specification mentioned this sensor can't change its I2C addres
+# Thus, the address is pre-defined and fixed  
 TCS34725_DEFAULT_ADDRESS = 0x29
-
-# TCS34725 Register Set
-TCS34725_COMMAND_BIT = 0x80 #Set the first bit as 1 
-TCS34725_REG_ENABLE = 0x00 # Enables states and interrupts
-TCS34725_REG_ATIME = 0x01 # RGBC integration time
-TCS34725_REG_WTIME = 0x03 # Wait time
-TCS34725_REG_CONFIG = 0x0D # Configuration register
-TCS34725_REG_CONTROL = 0x0F # Control register
+TCS34725_COMMAND_BIT = 0x80 #Set the first bit in command as 1 
 TCS34725_REG_CDATAL = 0x14 # Clear/IR channel low data register
-# we can read registers in a sequence, thus only the first 
-# address is needed, the rest are kept for future use
-# TCS34725_REG_CDATAH = 0x15 # Clear/IR channel high data register
-# TCS34725_REG_RDATAL = 0x16 # Red ADC low data register
-# TCS34725_REG_RDATAH = 0x17 # Red ADC high data register
-# TCS34725_REG_GDATAL = 0x18 # Green ADC low data register
-# TCS34725_REG_GDATAH = 0x19 # Green ADC high data register
-# TCS34725_REG_BDATAL = 0x1A # Blue ADC low data register
-# TCS34725_REG_BDATAH = 0x1B # Blue ADC high data register
-
-# TCS34725 Enable Register Configuration
-# TCS34725_REG_ENABLE_SAI = 0x40 # Sleep After Interrupt
-# TCS34725_REG_ENABLE_AIEN = 0x10 # ALS Interrupt Enable
-# TCS34725_REG_ENABLE_WEN = 0x08 # Wait Enable
-TCS34725_REG_ENABLE_AEN = 0x02 # ADC Enable
-TCS34725_REG_ENABLE_PON = 0x01 # Power ON
-
-# TCS34725 Time Register Configuration
-TCS34725_REG_ATIME_2_4 = 0xFF # Atime = 2.4 ms, Cycles = 1
-TCS34725_REG_ATIME_24 = 0xF6 # Atime = 24 ms, Cycles = 10
-TCS34725_REG_ATIME_101 = 0xDB # Atime = 101 ms, Cycles = 42
-TCS34725_REG_ATIME_154 = 0xC0 # Atime = 154 ms, Cycles = 64
-TCS34725_REG_ATIME_700 = 0x00 # Atime = 700 ms, Cycles = 256
-TCS34725_REG_WTIME_2_4 = 0xFF # Wtime = 2.4 ms
-TCS34725_REG_WTIME_204 = 0xAB # Wtime = 204 ms
-TCS34725_REG_WTIME_614 = 0x00 # Wtime = 614 ms
-
-# TCS34725 Gain Configuration
-TCS34725_REG_CONTROL_AGAIN_1 = 0x00 # 1x Gain
-TCS34725_REG_CONTROL_AGAIN_4 = 0x01 # 4x Gain
-TCS34725_REG_CONTROL_AGAIN_16 = 0x02 # 16x Gain
-TCS34725_REG_CONTROL_AGAIN_60 = 0x03 # 60x Gain
 
 class TCS34725():
     def __init__(self):
@@ -153,26 +135,29 @@ class TCS34725():
 
     def enable_selection(self):
         #Select the ENABLE register configuration from the given provided values
-        ENABLE_CONFIGURATION = (TCS34725_REG_ENABLE_AEN | TCS34725_REG_ENABLE_PON)
-        bus.write_byte_data(TCS34725_DEFAULT_ADDRESS, TCS34725_REG_ENABLE | TCS34725_COMMAND_BIT, ENABLE_CONFIGURATION)
+        # ADC Enable + Power on 
+        ENABLE_CONFIGURATION = (0x02 | 0x01)
+        # Enables states and interrupts 
+        bus.write_byte_data(TCS34725_DEFAULT_ADDRESS, 0x00 | TCS34725_COMMAND_BIT, ENABLE_CONFIGURATION)
 
     def time_selection(self):
-        #Select the ATIME register configuration from the given provided values
-        bus.write_byte_data(TCS34725_DEFAULT_ADDRESS, TCS34725_REG_ATIME | TCS34725_COMMAND_BIT, TCS34725_REG_ATIME_700)
+        # RGBC integration time, set Atime = 700 ms, Cycles = 256 (default value )
+        bus.write_byte_data(TCS34725_DEFAULT_ADDRESS, 0x01 | TCS34725_COMMAND_BIT, 0x00)
 
-        #Select the WTIME register configuration from the given provided values
-        bus.write_byte_data(TCS34725_DEFAULT_ADDRESS, TCS34725_REG_WTIME | TCS34725_COMMAND_BIT, TCS34725_REG_WTIME_2_4)
+        # Write to Wait time register to Wtime = 2.4 ms (default value)
+        bus.write_byte_data(TCS34725_DEFAULT_ADDRESS, 0x03 | TCS34725_COMMAND_BIT, 0xFF)
 
     def gain_selection(self):
-        #Select the gain register configuration from the given provided values
-        bus.write_byte_data(TCS34725_DEFAULT_ADDRESS, TCS34725_REG_CONTROL | TCS34725_COMMAND_BIT, TCS34725_REG_CONTROL_AGAIN_1)
+        # Write to gain register to gain = 1x
+        # Note: 0x00 -> x1  0x01 -> x4  0x02 -> x16  0x03 -> x60 
+        bus.write_byte_data(TCS34725_DEFAULT_ADDRESS, 0x0F | TCS34725_COMMAND_BIT, 0x00)
 
     def readluminance(self):
         #Read data back from TCS34725_REG_CDATAL(0x94), 8 bytes, with TCS34725_COMMAND_BIT, (0x80)
         #cData LSB, cData MSB, Red LSB, Red MSB, Green LSB, Green MSB, Blue LSB, Blue MSB
         data = bus.read_i2c_block_data(TCS34725_DEFAULT_ADDRESS, TCS34725_REG_CDATAL | TCS34725_COMMAND_BIT, 8)
 
-    # Convert the data
+        # Convert the data
         cData = data[1] * 256 + data[0]
         red = data[3] * 256 + data[2]
         green = data[5] * 256 + data[4]
