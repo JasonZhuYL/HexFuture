@@ -1,0 +1,59 @@
+html {
+  display: flex;
+  font-size: 1.3rem;
+}
+
+body {
+  width: 100%;
+  min-width: 350px;
+}
+.title {
+  font-size: 3 rem;
+  text-align: center;
+  margin: 2rem auto;
+  width: 90%;
+  color: #ffffff;
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 1 auto;
+}
+tr {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+td {
+  flex: 50%;
+}
+.row > .pad {
+  flex-direction: column;
+  flex: 45%;
+  min-width: 150px;
+  padding: 1rem;
+  font-size: 1.5rem;
+}
+
+.pad > table {
+  width: 100%;
+}
+
+.pad tbody {
+  display: table;
+  width: 90%;
+  margin: 1 auto;
+  background-color: #efefef;
+  border-radius: 10px;
+  padding: 1%;
+}
+.bottom {
+  text-align: center;
+  font-size: 0.8rem;
+  margin: 1rem;
+  color: #131010;
+}
