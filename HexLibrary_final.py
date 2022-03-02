@@ -105,13 +105,15 @@ class ADS1115():
 TCS34725_DEFAULT_ADDRESS = 0x29
 
 # TCS34725 Register Set
-TCS34725_COMMAND_BIT = 0x80
+TCS34725_COMMAND_BIT = 0x80 #Set the first bit as 1 
 TCS34725_REG_ENABLE = 0x00 # Enables states and interrupts
 TCS34725_REG_ATIME = 0x01 # RGBC integration time
 TCS34725_REG_WTIME = 0x03 # Wait time
 TCS34725_REG_CONFIG = 0x0D # Configuration register
 TCS34725_REG_CONTROL = 0x0F # Control register
 TCS34725_REG_CDATAL = 0x14 # Clear/IR channel low data register
+# we can read registers in a sequence, thus only the first 
+# address is needed, the rest are kept for future use
 # TCS34725_REG_CDATAH = 0x15 # Clear/IR channel high data register
 # TCS34725_REG_RDATAL = 0x16 # Red ADC low data register
 # TCS34725_REG_RDATAH = 0x17 # Red ADC high data register
