@@ -1,0 +1,11 @@
+.info {
+  flex: 50;
+}
+
+.chart {
+  font-size: 30px;
+  background-color: aliceblue;
+}
+.selectbar {
+  font-size: 25px;
+}
